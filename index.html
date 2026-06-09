@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GeoFlux — 基站数据地理化匹配工具</title>
+<title>GeoFlux — 基站照片 OCR 识别 · 地图标注工具</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -35,7 +35,6 @@
     min-height: 100dvh;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   .container { max-width: 720px; margin: 0 auto; padding: 64px 24px 80px; }
@@ -71,7 +70,6 @@
     font-family: var(--font-mono);
     font-size: 15px;
     font-weight: 500;
-    color: var(--text);
     margin-bottom: 6px;
     word-break: break-all;
   }
@@ -94,6 +92,10 @@
   .btn-download:active { transform: scale(.98); }
   .btn-download:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
   .btn-download svg { width: 20px; height: 20px; }
+  .dl-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn-github { background: #24292f; color: #fff; box-shadow: none; }
+  .btn-github:hover { background: #1b1f23; box-shadow: 0 0 24px rgba(255,255,255,.06); }
+  .btn-github svg { width: 18px; height: 18px; }
 
   /* SHA256 */
   .sha-row {
@@ -133,13 +135,37 @@
   .feature h3 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
   .feature p { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
 
+  /* Workflow */
+  .workflow { margin-bottom: 40px; }
+  .workflow h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); text-align: center; margin-bottom: 16px; }
+  .workflow-steps {
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: 0; flex-wrap: wrap; padding: 0;
+  }
+  .wf-step {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    width: 100px; text-align: center;
+  }
+  .wf-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+    color: var(--text-secondary);
+  }
+  .wf-step .wf-title { font-size: 12px; font-weight: 600; color: var(--text); }
+  .wf-step .wf-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; display: none; }
+  .wf-arrow { color: var(--text-muted); font-size: 16px; align-self: center; margin: 0 -4px; padding-bottom: 24px; }
+  @media (min-width: 600px) {
+    .wf-step .wf-desc { display: block; }
+  }
+
   /* History */
   .history { margin-bottom: 40px; }
   .history-header {
     display: flex; align-items: center; justify-content: space-between;
     cursor: pointer; padding: 14px 0;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 0;
   }
   .history-header h2 { font-size: 15px; font-weight: 600; }
   .history-header .chevron { transition: transform .2s; color: var(--text-muted); }
@@ -153,7 +179,6 @@
   }
   .history-item .ver {
     font-family: var(--font-mono); font-size: 13px; font-weight: 500;
-    color: var(--text);
   }
   .history-item .info { font-size: 12px; color: var(--text-muted); }
   .history-item .btn-sm {
@@ -197,13 +222,7 @@
 
   /* Footer */
   .footer { text-align: center; padding-top: 32px; border-top: 1px solid var(--border); }
-  .footer a {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 13px; font-weight: 500; color: var(--text-secondary);
-    text-decoration: none; transition: .15s;
-  }
-  .footer a:hover { color: var(--text); }
-  .footer a svg { width: 16px; height: 16px; }
+  .footer p { font-size: 12px; color: var(--text-muted); }
 
   @media (max-width: 480px) {
     .container { padding: 40px 16px 64px; }
@@ -225,58 +244,71 @@
   <header class="header">
     <div class="header-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
       </svg>
     </div>
     <h1>GeoFlux</h1>
-    <p class="sub">基站数据地理化匹配工具</p>
+    <p class="sub">基站照片 OCR 识别 · 地图标注 · 一键导出</p>
   </header>
 
-  <!-- Download card — populated by JS -->
   <div id="download-section"></div>
 
-  <!-- Features -->
   <div class="features">
     <div class="feature">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
       </div>
       <div>
-        <h3>Excel 一键导入</h3>
-        <p>上传基站表格，自动解析列名并匹配地理坐标</p>
+        <h3>上传表格</h3>
+        <p>上传 .xlsx 基站数据表，自动识别列名，Sheet 名模糊匹配 + 全表保底</p>
       </div>
     </div>
     <div class="feature">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </div>
       <div>
-        <h3>多 Sheet 支持</h3>
-        <p>自动识别或手动指定要处理的 Sheet，支持模糊匹配</p>
+        <h3>OCR 照片识别</h3>
+        <p>拖拽上传，自动提取基站名称、经纬度、地点、内容序号，同名去重</p>
       </div>
     </div>
     <div class="feature">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
       </div>
       <div>
-        <h3>合并分组去重</h3>
-        <p>数据合并、分组统计、智能去重，处理大量基站数据</p>
+        <h3>多瓦片地图源</h3>
+        <p>Google 卫星/混合、ArcGIS 卫星、天地图卫星，自动降级避免白板</p>
       </div>
     </div>
     <div class="feature">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
       </div>
       <div>
-        <h3>OCR 模糊识别</h3>
-        <p>照片文字识别自动匹配，内置纠错和相似度评分</p>
+        <h3>箭头标注导出</h3>
+        <p>多方向角独立调节长度/粗细/箭头大小，2x 高清截图，自动测距命名</p>
       </div>
     </div>
   </div>
 
-  <!-- Version history -->
+  <div class="workflow">
+    <h2>工作流程</h2>
+    <div class="workflow-steps">
+      <div class="wf-step"><div class="wf-num">1</div><div class="wf-title">配置表格</div><div class="wf-desc">上传 .xlsx</div></div>
+      <span class="wf-arrow">&rarr;</span>
+      <div class="wf-step"><div class="wf-num">2</div><div class="wf-title">上传照片</div><div class="wf-desc">OCR 自动识别</div></div>
+      <span class="wf-arrow">&rarr;</span>
+      <div class="wf-step"><div class="wf-num">3</div><div class="wf-title">修正结果</div><div class="wf-desc">补全坐标，归并</div></div>
+      <span class="wf-arrow">&rarr;</span>
+      <div class="wf-step"><div class="wf-num">4</div><div class="wf-title">进入地图</div><div class="wf-desc">生成 Pin 点</div></div>
+      <span class="wf-arrow">&rarr;</span>
+      <div class="wf-step"><div class="wf-num">5</div><div class="wf-title">编辑标注</div><div class="wf-desc">方向角箭头</div></div>
+      <span class="wf-arrow">&rarr;</span>
+      <div class="wf-step"><div class="wf-num">6</div><div class="wf-title">导出地图</div><div class="wf-desc">高清下载</div></div>
+    </div>
+  </div>
+
   <div class="history" id="history-section">
     <div class="history-header" id="history-toggle" role="button" tabindex="0" aria-expanded="false">
       <h2>历史版本</h2>
@@ -285,12 +317,8 @@
     <div class="history-list" id="history-list"></div>
   </div>
 
-  <!-- Footer -->
   <footer class="footer">
-    <a href="https://github.com/chainlinn/GeoFlux" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      GitHub
-    </a>
+    <p>GeoFlux &copy; 2026 &middot; Windows 10/11</p>
   </footer>
 
 </div>
@@ -326,80 +354,93 @@
       return;
     }
 
-    const releases = data.sort((a, b) => b.version.localeCompare(a.version, undefined, { numeric: true }));
-    const latest = releases[0];
+    var releases = data.sort(function(a, b) {
+      return b.version.localeCompare(a.version, undefined, { numeric: true });
+    });
+    var latest = releases[0];
+    var hasGitee = !!latest.url_gitee;
 
-    // ── Primary download card ──
+    var btns = '';
+    if (hasGitee) {
+      btns = `<div class="dl-btns">
+        <a class="btn-download" href="${escapeAttr(latest.url_gitee)}" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          下载 Windows 安装包
+        </a>
+        <a class="btn-download btn-github" href="${escapeAttr(latest.url_github)}" download>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub 下载
+        </a>
+      </div>`;
+    } else {
+      btns = `<a class="btn-download" href="${escapeAttr(latest.url_github || latest.url)}" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        下载 Windows 安装包
+      </a>`;
+    }
+
     $download.innerHTML = `<div class="download-card">
       <div class="version">v${escapeHtml(latest.version)}</div>
       <div class="filename">${escapeHtml(latest.file)}</div>
       <div class="meta"><span>${escapeHtml(latest.size || '')}</span><span>${escapeHtml(latest.date || '')}</span></div>
-      <a class="btn-download" href="${escapeAttr(latest.url)}" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-        下载 Windows 安装包
-      </a>
+      ${btns}
       ${latest.sha256 ? `<div class="sha-row"><span class="sha-label">SHA256</span><code class="sha-value" id="sha-val">${escapeHtml(latest.sha256)}</code><button class="btn-copy" id="btn-copy">复制</button></div>` : ''}
     </div>`;
 
-    // SHA256 copy
-    const btnCopy = document.getElementById('btn-copy');
-    const shaVal = document.getElementById('sha-val');
+    var btnCopy = document.getElementById('btn-copy');
+    var shaVal = document.getElementById('sha-val');
     if (btnCopy && shaVal) {
-      btnCopy.addEventListener('click', () => {
-        navigator.clipboard.writeText(shaVal.textContent).then(() => {
+      btnCopy.addEventListener('click', function() {
+        navigator.clipboard.writeText(shaVal.textContent).then(function() {
           btnCopy.textContent = '已复制';
           btnCopy.classList.add('copied');
-          setTimeout(() => { btnCopy.textContent = '复制'; btnCopy.classList.remove('copied'); }, 2000);
-        }).catch(() => {});
+          setTimeout(function() { btnCopy.textContent = '复制'; btnCopy.classList.remove('copied'); }, 2000);
+        }).catch(function() {});
       });
     }
 
-    // ── History list ──
     if (releases.length <= 1) {
       document.getElementById('history-section').style.display = 'none';
     } else {
-      $historyList.innerHTML = releases.slice(1).map(r => `<div class="history-item">
-        <div>
-          <span class="ver">v${escapeHtml(r.version)}</span>
-          <span class="info"> &middot; ${escapeHtml(r.size || '')} &middot; ${escapeHtml(r.date || '')}</span>
-        </div>
-        <a class="btn-sm" href="${escapeAttr(r.url)}" download>下载</a>
-      </div>`).join('');
+      $historyList.innerHTML = releases.slice(1).map(function(r) {
+        var links = `<a class="btn-sm" href="${escapeAttr(r.url_github || r.url)}" download>GitHub</a>`;
+        if (r.url_gitee) links += `<a class="btn-sm" href="${escapeAttr(r.url_gitee)}" download>Gitee</a>`;
+        return `<div class="history-item">
+          <div>
+            <span class="ver">v${escapeHtml(r.version)}</span>
+            <span class="info"> &middot; ${escapeHtml(r.size || '')} &middot; ${escapeHtml(r.date || '')}</span>
+          </div>
+          <div style="display:flex;gap:6px">${links}</div>
+        </div>`;
+      }).join('');
     }
   }
 
-  function escapeAttr(s) {
-    if (!s) return '';
-    return String(s).replace(/"/g, '&quot;');
-  }
-
+  function escapeAttr(s) { return s ? String(s).replace(/"/g, '&quot;') : ''; }
   function escapeHtml(s) {
     if (!s) return '';
-    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-    return String(s).replace(/[&<>"']/g, c => map[c]);
+    var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    return String(s).replace(/[&<>"']/g, function(c) { return map[c]; });
   }
 
-  // ── History toggle ──
-  $historyToggle.addEventListener('click', () => {
-    const expanded = $historyToggle.getAttribute('aria-expanded') === 'true';
+  $historyToggle.addEventListener('click', function() {
+    var expanded = $historyToggle.getAttribute('aria-expanded') === 'true';
     $historyToggle.setAttribute('aria-expanded', String(!expanded));
     $historyToggle.classList.toggle('open', !expanded);
     $historyList.classList.toggle('open', !expanded);
   });
-  $historyToggle.addEventListener('keydown', (e) => {
+  $historyToggle.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $historyToggle.click(); }
   });
 
-  // ── Fetch releases.json ──
   renderSkeleton();
   try {
-    const res = await fetch(RELEASES_JSON);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    render(data);
+    var res = await fetch(RELEASES_JSON);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    render(await res.json());
   } catch (err) {
     renderError('无法加载版本信息，请检查网络后重试');
-    console.error('Failed to fetch releases:', err);
+    console.error(err);
   }
 })();
 </script>
