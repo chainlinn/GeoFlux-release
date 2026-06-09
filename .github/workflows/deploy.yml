@@ -1,0 +1,12 @@
+name: forge
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: forge-deploy
+    uses: chainlinn/forge/.github/workflows/deploy.yml@v0.1.10
+    secrets: inherit

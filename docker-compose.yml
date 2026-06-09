@@ -1,0 +1,10 @@
+services:
+  web:
+    image: santu24/geoflux-release:dev
+    pull_policy: always
+    container_name: geoflux-release
+    ports:
+      - "9000:80"
+    volumes:
+      - /home/santu/deploy/apps/geoflux-release/data:/data
+    restart: unless-stopped
