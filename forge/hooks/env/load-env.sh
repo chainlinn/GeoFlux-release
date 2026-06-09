@@ -12,4 +12,4 @@ DEPLOY_ROOT="${DEPLOY_ROOT:-/tmp/deploy}"
 export APP_NAME APP_DIR DATA_DIR DEPLOY_ROOT
 
 # ── 在此处添加项目专属导出 ──
-# export DOMAIN="$APP_NAME.oneblue.dev"
+export DOMAIN="geoflux.oneblue.dev"
