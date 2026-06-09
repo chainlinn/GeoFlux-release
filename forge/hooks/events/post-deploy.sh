@@ -9,6 +9,6 @@ source "$DIR/../env/load-env.sh"
 # 2. load-env.sh 里加 export DOMAIN="$APP_NAME.oneblue.dev"
 # 3. 取消下面注释：
 source "$DIR/../plugins/cloudflare.sh"
-cf_route_add "$DOMAIN" "http://localhost:9000"
+cf_route_add "$DOMAIN" "http://192.168.10.15:9000"
 
 # ── 在此处添加部署后逻辑 ──
