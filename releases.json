@@ -3,8 +3,7 @@
     "version": "0.2.0",
     "date": "2026-06-09",
     "file": "GeoFlux.Setup.0.2.0.exe",
-    "url_github": "https://github.com/chainlinn/GeoFlux-release/releases/download/v0.2.0/GeoFlux.Setup.0.2.0.exe",
-    "url_gitee": "",
+    "url": "https://github.com/chainlinn/GeoFlux-release/releases/download/v0.2.0/GeoFlux.Setup.0.2.0.exe",
     "size": "182MB",
     "sha256": "f4381721b87dbdb046f6a9816b260062a153ae47176fce774c1b3012821ce68c"
   }
