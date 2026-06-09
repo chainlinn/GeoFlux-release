@@ -46,9 +46,10 @@ URL_GITEE=""
 if [ -n "${GITEE_TOKEN:-}" ] && [ -n "${GITEE_REPO:-}" ]; then
   echo "  --- Gitee ---"
 
-  # Push tag to Gitee
-  git -C "$SCRIPT_DIR/.." push gitee "$TAG" 2>/dev/null || {
-    echo "  Warning: git push gitee failed, ensure 'gitee' remote is configured"
+  # Push tag to Gitee (uses token from env)
+  GITEE_URL="https://oauth2:${GITEE_TOKEN}@gitee.com/${GITEE_REPO}.git"
+  git -C "$SCRIPT_DIR/.." push "$GITEE_URL" "$TAG" 2>/dev/null || {
+    echo "  Warning: git push gitee failed, check GITEE_TOKEN and repo"
   }
 
   # Create release via API
